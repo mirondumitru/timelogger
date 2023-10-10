@@ -20,15 +20,15 @@ public class TimeRegistrationsValidator : AbstractValidator<TimeRegistration>
             .NotEqual(default(DateTime))
             .WithMessage("'ValueDate' is required");
 
-        RuleFor(x => x.Hours)
+        RuleFor(x => x.Minutes)
             .NotNull()
             .NotEqual(default(int))
-            .WithMessage("'Hours' is required");
+            .WithMessage("'Minutes' is required");
 
-        RuleFor(x => x.Hours)
+        RuleFor(x => x.Minutes)
             .GreaterThan(0)
-            .When(x => x.Hours != 0)
-            .WithMessage("'Hours' should be greater than 0");
+            .When(x => x.Minutes != 0)
+            .WithMessage("'Minutes' should be greater than 0");
 
         RuleFor(x => x.CreatedAtUtc)
             .Null().WithMessage("'CreatedAtUtc' cannot be manually set and should be empty");

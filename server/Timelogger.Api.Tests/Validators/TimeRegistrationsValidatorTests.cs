@@ -17,35 +17,35 @@ public class TimeRegistrationsValidatorTests
     }
 
     [Fact]
-    public async Task Should_Validate_Hours_Not_Zero()
+    public async Task Should_Validate_Minutes_Not_Zero()
     {
         var fixture = new Fixture();
         var model = fixture.Build<TimeRegistration>()
             .Without(x => x.CreatedAtUtc)
-            .With(x => x.Hours, 0)
+            .With(x => x.Minutes, 0)
             .Create();
 
         var validationResult = await _sut.ValidateAsync(model);
 
         validationResult.IsValid.Should().BeFalse();
         validationResult.Errors.Should().HaveCount(1);
-        validationResult.Errors.Single().PropertyName.Should().Be("Hours");
+        validationResult.Errors.Single().PropertyName.Should().Be("Minutes");
     }
 
     [Fact]
-    public async Task Should_Validate_Hours_GreaterThan_Zero()
+    public async Task Should_Validate_Minutes_GreaterThan_Zero()
     {
         var fixture = new Fixture();
         var model = fixture.Build<TimeRegistration>()
             .Without(x => x.CreatedAtUtc)
-            .With(x => x.Hours, -1)
+            .With(x => x.Minutes, -1)
             .Create();
 
         var validationResult = await _sut.ValidateAsync(model);
 
         validationResult.IsValid.Should().BeFalse();
         validationResult.Errors.Should().HaveCount(1);
-        validationResult.Errors.Single().PropertyName.Should().Be("Hours");
+        validationResult.Errors.Single().PropertyName.Should().Be("Minutes");
     }
 
     [Fact]
@@ -115,7 +115,7 @@ public class TimeRegistrationsValidatorTests
     {
         var fixture = new Fixture();
         var model = fixture.Build<TimeRegistration>()
-            .With(x => x.Hours, 5)
+            .With(x => x.Minutes, 5)
             .Without(x => x.CreatedAtUtc).Create();
 
         var validationResult = await _sut.ValidateAsync(model);

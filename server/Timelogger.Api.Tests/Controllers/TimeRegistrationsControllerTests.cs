@@ -41,7 +41,7 @@ public class TimeRegistrationsControllerTests : IDisposable
         var instance = fixture.Create<TimeRegistration>();
 
         _mockValidator.Setup(x => x.ValidateAsync(instance, CancellationToken.None))
-            .ReturnsAsync(new ValidationResult(new[] { new ValidationFailure("Hours", "Error message") }));
+            .ReturnsAsync(new ValidationResult(new[] { new ValidationFailure("Minutes", "Error message") }));
 
         // act
         var result = await _sut.Post(instance);

@@ -7,7 +7,7 @@ using Timelogger.Projects;
 
 namespace Timelogger.TimeRegistrations.Commands.Handlers.cs;
 
-internal class CreateTimeRegistrationCommandHandler : IRequestHandler<CreateTimeRegistrationCommand, Result<TimeRegistration>>
+public class CreateTimeRegistrationCommandHandler : IRequestHandler<CreateTimeRegistrationCommand, Result<TimeRegistration>>
 {
     private readonly IDateTimeService _dateTimeService;
     private readonly IProjectsRepository _projectsRepository;
@@ -21,24 +21,22 @@ internal class CreateTimeRegistrationCommandHandler : IRequestHandler<CreateTime
         _dateTimeService = dateTimeService;
     }
 
-    public async Task<Result<TimeRegistration>> Handle(CreateTimeRegistrationCommand request,
-        CancellationToken cancellationToken)
+    public async Task<Result<TimeRegistration>> Handle(CreateTimeRegistrationCommand request, CancellationToken cancellationToken)
     {
         var timeRegistration = request.TimeRegistration;
 
-        if (timeRegistration.Hours < 0.5m)
+        if (timeRegistration.Minutes < 30)
             return new Result<TimeRegistration>(new BadRequestError("Cannot register less then 30 minutes"));
 
         var project = await _projectsRepository.GetAsync(timeRegistration.Project.Id);
 
         if (project == null)
             return new Result<TimeRegistration>(
-                new NotFoundError($"Project with ID '{timeRegistration.Project.Id}' was not found"));
+                new BadRequestError($"Project with ID '{timeRegistration.Project.Id}' was not found"));
 
         if (project.IsCompleted)
             return new Result<TimeRegistration>(
-                new BadRequestError(
-                    $"Cannot register time - Project with ID '{timeRegistration.Project.Id}' is completed"));
+                new BadRequestError($"Cannot register time - Project with ID '{timeRegistration.Project.Id}' is completed"));
 
         timeRegistration.CreatedAtUtc = _dateTimeService.UtcNow;
         timeRegistration.Project = project;
