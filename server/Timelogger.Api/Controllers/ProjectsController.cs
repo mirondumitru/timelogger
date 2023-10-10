@@ -1,29 +1,25 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Timelogger.Foundations.Queries;
+using Timelogger.Projects;
 
-namespace Timelogger.Api.Controllers
+namespace Timelogger.Api.Controllers;
+
+[Route("api/[controller]")]
+public class ProjectsController : BaseController
 {
-	[Route("api/[controller]")]
-	public class ProjectsController : Controller
-	{
-		private readonly ApiContext _context;
+    private readonly IProjectsRepository _projectsRepository;
 
-		public ProjectsController(ApiContext context)
-		{
-			_context = context;
-		}
+    public ProjectsController(IProjectsRepository projectsRepository)
+    {
+        _projectsRepository = projectsRepository;
+    }
 
-		[HttpGet]
-		[Route("hello-world")]
-		public string HelloWorld()
-		{
-			return "Hello Back!";
-		}
+    [HttpGet]
+    public async Task<IActionResult> Get([FromQuery] Sort sort)
+    {
+        var projects = await _projectsRepository.GetAsync(sort);
 
-		// GET api/projects
-		[HttpGet]
-		public IActionResult Get()
-		{
-			return Ok(_context.Projects);
-		}
-	}
+        return Ok(projects);
+    }
 }

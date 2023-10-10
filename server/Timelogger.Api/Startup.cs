@@ -1,11 +1,17 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Hosting;
-using Timelogger.Entities;
+using Timelogger.Projects;
+using Timelogger.Repository;
+using FluentValidation;
+using Timelogger.Api.Validators;
+using Timelogger.Foundations.DateTime;
+using Timelogger.TimeRegistrations;
 
 namespace Timelogger.Api
 {
@@ -43,7 +49,15 @@ namespace Timelogger.Api
 			{
 				services.AddCors();
 			}
-		}
+
+            services.AddScoped<IValidator<TimeRegistration>, TimeRegistrationsValidator>();
+
+            services.AddTransient<IDateTimeService, DateTimeService>();
+
+            services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<TimeRegistration>());
+            services.AddTransient<IProjectsRepository, ProjectsRepository>();
+            services.AddTransient<ITimeRegistrationsRepository, TimeRegistrationsRepository>();
+        }
 
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 		{
@@ -69,15 +83,32 @@ namespace Timelogger.Api
 		private static void SeedDatabase(IServiceScope scope)
 		{
 			var context = scope.ServiceProvider.GetService<ApiContext>();
-			var testProject1 = new Project
-			{
-				Id = 1,
-				Name = "e-conomic Interview"
-			};
 
-			context.Projects.Add(testProject1);
+			context.Projects.Add(new Project
+            {
+                Id = 1,
+                Name = "e-conomic Interview",
+                Deadline = new DateTime(2023, 10, 13),
+                IsCompleted = true
+            });
 
-			context.SaveChanges();
+            context.Projects.Add(new Project
+            {
+                Id = 2,
+                Name = "MenuGenerator",
+                Deadline = new DateTime(2024, 05, 01),
+                IsCompleted = false
+            });
+
+            context.Projects.Add(new Project
+            {
+                Id = 3,
+                Name = "ChatGPT",
+                Deadline = new DateTime(2024, 12, 31),
+                IsCompleted = false
+            });
+
+            context.SaveChanges();
 		}
 	}
 }
