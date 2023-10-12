@@ -1,6 +1,10 @@
 import * as React from "react";
 import Projects from "./views/Projects";
 import "./style.css";
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import TimeRegistrations from "./views/TimeRegistrations";
+import TimeRegistrationsAdd from "./views/TimeRegistrationsAdd";
+// import TimeRegistrationsForm from "./views/TimeRegistrationsAdd";
 
 export default function App() {
     return (
@@ -15,7 +19,13 @@ export default function App() {
 
             <main>
                 <div className="container mx-auto">
-                    <Projects />
+                    <Router>
+                        <Routes>
+                            <Route path="/" element={<Projects />} />
+                            <Route path="/timeRegistrations" element={<TimeRegistrations />} />
+                            <Route path="/timeRegistrations/add" element={<TimeRegistrationsAdd />} />
+                        </Routes>
+                    </Router>
                 </div>
             </main>
         </>

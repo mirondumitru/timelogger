@@ -1,35 +1,77 @@
-import React from "react";
-import Table from "../components/Table";
+import React, { useEffect, useState } from "react";
+import { Column } from "react-table";
+import { IProject } from "../types/IProject";
+import TimeLoggerTable from "../components/Table";
+import { getAll } from "../api/projectsApi";
+import RedirectButton from "../components/RedirectButton";
+import moment from 'moment';
+
+function composeUrl(id: number) {
+    return "timeRegistrations?projectId=" + id;
+}
+
+const columns: Array<Column> = [
+    {
+        Header: "Id",
+        accessor: "id",
+        width: 20,
+        minWidth: 20,
+    },
+    {
+        Header: "Name",
+        accessor: "name"
+    },
+    {
+        Header: "Deadline",
+        accessor: "deadline",
+        width: 75,
+        minWidth: 75,
+        Cell: props => (
+            <span>{moment(props.row.values.deadline).format('YYYY-MM-DD')}</span>
+        )
+    },
+    {
+        Header: "Is Completed",
+        accessor: "isCompleted",
+        width: 75,
+        minWidth: 75,
+        Cell: props => (
+            <input type="checkbox" disabled checked={props.value} />
+        )
+    },
+    {
+        Header: "Time Registrations",
+        width: 65,
+        minWidth: 65,
+        Cell: props => (
+            <RedirectButton text="Registrations" path={composeUrl(props.row.values.id)} disabled={false}></RedirectButton>
+        )
+    }
+];
 
 export default function Projects() {
+    const [data, setData] = useState<IProject[]>([]);
+
+    const fetchData = async () => {
+        const response = await getAll({sortBy:"deadline", sortOrder:"desc"});
+        setData(response);
+    }
+
+    useEffect(() => {
+        fetchData();
+    }, []);
+
     return (
         <>
             <div className="flex items-center my-6">
                 <div className="w-1/2">
-                    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                        Add entry
-                    </button>
+
                 </div>
 
-                <div className="w-1/2 flex justify-end">
-                    <form>
-                        <input
-                            className="border rounded-full py-2 px-4"
-                            type="search"
-                            placeholder="Search"
-                            aria-label="Search"
-                        />
-                        <button
-                            className="bg-blue-500 hover:bg-blue-700 text-white rounded-full py-2 px-4 ml-2"
-                            type="submit"
-                        >
-                            Search
-                        </button>
-                    </form>
-                </div>
+               
             </div>
 
-            <Table />
+            <TimeLoggerTable columns={columns} data={data} />
         </>
     );
 }
