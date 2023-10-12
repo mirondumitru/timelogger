@@ -22,4 +22,12 @@ public class ProjectsController : BaseController
 
         return Ok(projects);
     }
+
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetById([FromRoute] int id)
+    {
+        var projects = await _projectsRepository.GetAsync(id);
+
+        return Ok(projects);
+    }
 }

@@ -35,7 +35,7 @@ public class ProjectsRepository : IProjectsRepository
 
         return sort.SortBy.ToUpperInvariant() switch
         {
-            "Deadline" => sort.SortOrder.ToUpperInvariant() == "DESC"
+            "DEADLINE" => sort.SortOrder.ToUpperInvariant() == "DESC"
                 ? query.OrderBy(x => x.Deadline)
                 : query.OrderByDescending(x => x.Deadline),
 

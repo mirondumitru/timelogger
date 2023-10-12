@@ -84,28 +84,71 @@ namespace Timelogger.Api
 		{
 			var context = scope.ServiceProvider.GetService<ApiContext>();
 
-			context.Projects.Add(new Project
+            var interview = new Project
             {
                 Id = 1,
                 Name = "e-conomic Interview",
                 Deadline = new DateTime(2023, 10, 13),
                 IsCompleted = true
-            });
+            };
+
+            context.Projects.Add(interview);
 
             context.Projects.Add(new Project
             {
                 Id = 2,
                 Name = "MenuGenerator",
-                Deadline = new DateTime(2024, 05, 01),
+                Deadline = new DateTime(2023, 09, 29),
                 IsCompleted = false
             });
 
-            context.Projects.Add(new Project
+            var chatGpt = new Project
             {
                 Id = 3,
                 Name = "ChatGPT",
-                Deadline = new DateTime(2024, 12, 31),
+                Deadline = new DateTime(2023, 09, 01),
                 IsCompleted = false
+            };
+
+            context.Projects.Add(chatGpt);
+
+            context.TimeRegistrations.Add(new TimeRegistration()
+            {
+                Project = interview,
+                CreatedAtUtc = DateTime.UtcNow.Date,
+                Minutes = 180,
+                ValueDate = new DateTime(2023, 10, 10)
+            });
+
+            context.TimeRegistrations.Add(new TimeRegistration()
+            {
+                Project = interview,
+                CreatedAtUtc = DateTime.UtcNow.Date,
+                Minutes = 150,
+                ValueDate = new DateTime(2023, 10, 11)
+            });
+
+            context.TimeRegistrations.Add(new TimeRegistration()
+            {
+                Project = interview,
+                CreatedAtUtc = DateTime.UtcNow.Date,
+                Minutes = 210,
+                ValueDate = new DateTime(2023, 10, 12)
+            });
+            context.TimeRegistrations.Add(new TimeRegistration()
+            {
+                Project = chatGpt,
+                CreatedAtUtc = DateTime.UtcNow.Date,
+                Minutes = 45,
+                ValueDate = new DateTime(2023, 10, 12)
+            });
+
+            context.TimeRegistrations.Add(new TimeRegistration()
+            {
+                Project = chatGpt,
+                CreatedAtUtc = DateTime.UtcNow.Date,
+                Minutes = 90,
+                ValueDate = new DateTime(2023, 10, 12)
             });
 
             context.SaveChanges();
