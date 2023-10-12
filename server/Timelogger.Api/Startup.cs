@@ -132,7 +132,7 @@ namespace Timelogger.Api
             {
                 Project = interview,
                 CreatedAtUtc = DateTime.UtcNow.Date,
-                Minutes = 210,
+                Minutes = 165,
                 ValueDate = new DateTime(2023, 10, 12)
             });
             context.TimeRegistrations.Add(new TimeRegistration()
